@@ -6,7 +6,7 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class Entity(
-    @Json(name = "property1") val property1: String,
-    @Json(name = "property2") val property2: String,
-    @Json(name = "description") val description: String
+    val property1: String,
+    val property2: String,
+    val description: String
 ) : Parcelable

@@ -13,13 +13,20 @@ class EntityAdapter(
     private val onItemClick: (Entity) -> Unit
 ) : RecyclerView.Adapter<EntityAdapter.EntityViewHolder>() {
 
-    class EntityViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class EntityViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val property1Text: TextView = itemView.findViewById(R.id.property1Text)
         val property2Text: TextView = itemView.findViewById(R.id.property2Text)
+
+        init {
+            itemView.setOnClickListener {
+                onItemClick(entities[adapterPosition])
+            }
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EntityViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_entity, parent, false)
+        val view = LayoutInflater.from(parent.context)
+            .inflate(R.layout.item_entity, parent, false)
         return EntityViewHolder(view)
     }
 
@@ -27,7 +34,6 @@ class EntityAdapter(
         val entity = entities[position]
         holder.property1Text.text = entity.property1
         holder.property2Text.text = entity.property2
-        holder.itemView.setOnClickListener { onItemClick(entity) }
     }
 
     override fun getItemCount(): Int = entities.size

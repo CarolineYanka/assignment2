@@ -46,8 +46,10 @@ class LoginFragment : Fragment() {
         }
 
         viewModel.keypass.observe(viewLifecycleOwner) { keypass ->
-            val action = LoginFragmentDirections.actionLoginFragmentToDashboardFragment(keypass)
+            val action = LoginFragmentDirections
+                .actionLoginFragmentToDashboardFragment(keypass)
             findNavController().navigate(action)
+
         }
 
         viewModel.error.observe(viewLifecycleOwner) { errorMsg ->

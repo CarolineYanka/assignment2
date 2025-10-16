@@ -19,36 +19,45 @@ import kotlin.getValue
 class DashboardFragment : Fragment() {
 
     private val viewModel: DashboardViewModel by viewModels()
-    private val args: DashboardFragmentArgs by navArgs()
-
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: EntityAdapter
+    private var keypass: String? = null
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        keypass = arguments?.let { DashboardFragmentArgs.fromBundle(it).keypass }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_dashboard, container, false)
-        recyclerView = view.findViewById(R.id.recyclerView)
-        recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        return view
+        return inflater.inflate(R.layout.fragment_dashboard, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.loadDashboard(args.keypass)
+        recyclerView = view.findViewById(R.id.recyclerView)
+        recyclerView.layoutManager = LinearLayoutManager(requireContext())
+
+        keypass?.let { viewModel.loadDashboard(it) }
 
         viewModel.entities.observe(viewLifecycleOwner) { entities ->
-            adapter = EntityAdapter(entities) { entity ->
-                val action = DashboardFragmentDirections.actionDashboardFragmentToDetailsFragment(entity)
-                findNavController().navigate(action)
+            if (entities.isNotEmpty()) {
+                adapter = EntityAdapter(entities) { entity ->
+                    val action = DashboardFragmentDirections
+                        .actionDashboardFragmentToDetailsFragment(entity)
+                    findNavController().navigate(action)
+                }
+                recyclerView.adapter = adapter
+            } else {
+                Toast.makeText(requireContext(), "No entities found", Toast.LENGTH_SHORT).show()
             }
-            recyclerView.adapter = adapter
         }
 
-        viewModel.error.observe(viewLifecycleOwner) { errorMsg ->
-            Toast.makeText(requireContext(), errorMsg, Toast.LENGTH_LONG).show()
+        viewModel.error.observe(viewLifecycleOwner) { message ->
+            Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show()
         }
     }
 }
