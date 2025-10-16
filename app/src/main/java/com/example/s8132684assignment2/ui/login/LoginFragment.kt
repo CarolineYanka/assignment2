@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -18,20 +19,18 @@ class LoginFragment : Fragment() {
 
     private val viewModel: LoginViewModel by viewModels()
 
-    private lateinit var usernameEditText: EditText
-    private lateinit var passwordEditText: EditText
+    private lateinit var usernameEdit: EditText
+    private lateinit var passwordEdit: EditText
     private lateinit var loginButton: Button
-    private lateinit var errorText: TextView
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_login, container, false)
-        usernameEditText = view.findViewById(R.id.usernameEditText)
-        passwordEditText = view.findViewById(R.id.passwordEditText)
+        usernameEdit = view.findViewById(R.id.usernameEdit)
+        passwordEdit = view.findViewById(R.id.passwordEdit)
         loginButton = view.findViewById(R.id.loginButton)
-        errorText = view.findViewById(R.id.errorText)
         return view
     }
 
@@ -39,21 +38,20 @@ class LoginFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         loginButton.setOnClickListener {
-            val username = usernameEditText.text.toString()
-            val password = passwordEditText.text.toString()
-            viewModel.login(username, password)
+            val username = usernameEdit.text.toString()
+            val password = passwordEdit.text.toString()
+            val location = "footscray" // change based on your class
+
+            viewModel.login(location, username, password)
         }
 
-        viewModel.loginResult.observe(viewLifecycleOwner) { result ->
-            when(result) {
-                is LoginResult.Success -> {
-                    val action = LoginFragmentDirections.actionLoginFragmentToDashboardFragment(result.keypass)
-                    findNavController().navigate(action)
-                }
-                is LoginResult.Error -> {
-                    errorText.text = result.errorMessage
-                }
-            }
+        viewModel.keypass.observe(viewLifecycleOwner) { keypass ->
+            val action = LoginFragmentDirections.actionLoginFragmentToDashboardFragment(keypass)
+            findNavController().navigate(action)
+        }
+
+        viewModel.error.observe(viewLifecycleOwner) { errorMsg ->
+            Toast.makeText(requireContext(), errorMsg, Toast.LENGTH_LONG).show()
         }
     }
 }

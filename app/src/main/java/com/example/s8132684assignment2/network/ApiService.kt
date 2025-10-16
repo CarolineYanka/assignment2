@@ -10,11 +10,14 @@ import retrofit2.http.Path
 
 interface ApiService {
 
-    // Login endpoint (replace 'footscray' with your class location if needed)
-    @POST("footscray/auth")
-    suspend fun login(@Body request: LoginRequest): LoginResponse
+    @POST("{location}/auth")
+    suspend fun login(
+        @Path("location") location: String,
+        @Body request: LoginRequest
+    ): LoginResponse
 
-    // Dashboard endpoint
     @GET("dashboard/{keypass}")
-    suspend fun getDashboard(@Path("keypass") keypass: String): DashboardResponse
+    suspend fun getDashboard(
+        @Path("keypass") keypass: String
+    ): DashboardResponse
 }

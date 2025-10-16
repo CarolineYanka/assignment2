@@ -11,19 +11,24 @@ object RetrofitClient {
 
     private const val BASE_URL = "https://nit3213api.onrender.com/"
 
-    private val logging = HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BODY
+    private val logging = HttpLoggingInterceptor().apply {
+        level = HttpLoggingInterceptor.Level.BODY
     }
 
     private val client = OkHttpClient.Builder()
         .addInterceptor(logging)
         .build()
 
-    private val moshi = Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
-
-    val apiService: ApiService = Retrofit.Builder()
-        .baseUrl(BASE_URL)
-        .addConverterFactory(MoshiConverterFactory.create(moshi))
-        .client(client)
+    private val moshi = Moshi.Builder()
+        .add(KotlinJsonAdapterFactory())
         .build()
-        .create(ApiService::class.java)
+
+    val apiService: ApiService by lazy {
+        Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .addConverterFactory(MoshiConverterFactory.create(moshi))
+            .client(client)
+            .build()
+            .create(ApiService::class.java)
+    }
 }
