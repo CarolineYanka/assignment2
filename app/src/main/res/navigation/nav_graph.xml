@@ -8,7 +8,7 @@
     <!-- Login Screen -->
     <fragment
         android:id="@+id/loginFragment"
-        android:name="com.vu.s8132684assignment2.ui.login.LoginFragment"
+        android:name="com.example.s8132684assignment2.ui.login.LoginFragment"
         android:label="Login"
         tools:layout="@layout/fragment_login">
         <action
@@ -19,7 +19,7 @@
     <!-- Dashboard Screen -->
     <fragment
         android:id="@+id/dashboardFragment"
-        android:name="com.vu.s8132684assignment2.ui.dashboard.DashboardFragment"
+        android:name="com.example.s8132684assignment2.ui.dashboard.DashboardFragment"
         android:label="Dashboard"
         tools:layout="@layout/fragment_dashboard">
         <argument
@@ -33,7 +33,7 @@
     <!-- Details Screen -->
     <fragment
         android:id="@+id/detailsFragment"
-        android:name="com.vu.s8132684assignment2.ui.details.DetailsFragment"
+        android:name="com.example.s8132684assignment2.ui.details.DetailsFragment"
         android:label="Details"
         tools:layout="@layout/fragment_details">
         <argument
