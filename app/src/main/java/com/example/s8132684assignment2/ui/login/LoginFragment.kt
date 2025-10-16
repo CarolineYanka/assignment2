@@ -11,7 +11,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.s8132684assignment2.R
-import com.example.s8132684assignment2.viewModel.LoginResult
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
