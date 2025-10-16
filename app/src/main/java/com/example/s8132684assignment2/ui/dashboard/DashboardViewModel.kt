@@ -1,41 +1,26 @@
 package com.example.s8132684assignment2.ui.dashboard
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.example.s8132684assignment2.data.DashboardResponse
+import androidx.lifecycle.*
 import com.example.s8132684assignment2.data.Entity
-import com.example.s8132684assignment2.repository.DashboardRepository
-import dagger.hilt.android.lifecycle.HiltViewModel
-import jakarta.inject.Inject
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import com.example.s8132684assignment2.data.EntityRepository
 import kotlinx.coroutines.launch
 
-@HiltViewModel
-class DashboardViewModel @Inject constructor(
-    private val repository: DashboardRepository
-) : ViewModel() {
+class DashboardViewModel(private val repository: EntityRepository) : ViewModel() {
 
-    private val _entities = MutableStateFlow<List<Entity>>(emptyList())
-    val entities: StateFlow<List<Entity>> = _entities
+    private val _entities = MutableLiveData<List<Entity>>()
+    val entities: LiveData<List<Entity>> get() = _entities
 
-    fun loadDashboardData(keypass: String) {
+    private val _error = MutableLiveData<String>()
+    val error: LiveData<String> get() = _error
+
+    fun loadDashboardData() {
         viewModelScope.launch {
-            try {
-                // Call the repository to get data
-                val response = repository.getDashboard(keypass)
-                // Assuming the response has a list of entities
-                _entities.value = response.entities
-            } catch (e: Exception) {
-                e.printStackTrace()
+            val result = repository.fetchEntities()
+            result.onSuccess { list ->
+                _entities.value = list
+            }.onFailure { e ->
+                _error.value = e.message
             }
         }
-    }
-
-    suspend fun DashboardRepository.getDashboard(keypass: String): DashboardResponse {
-        // Call the corresponding function in your ApiService
-        return apiService.getDashboard(keypass)
     }
 }

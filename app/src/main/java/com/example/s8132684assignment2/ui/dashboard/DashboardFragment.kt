@@ -1,9 +1,10 @@
+// In: app/src/main/java/com/example/s8132684assignment2/ui/dashboard/DashboardFragment.kt
+
 package com.example.s8132684assignment2.ui.dashboard
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -12,44 +13,46 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.s8132684assignment2.R
 import com.example.s8132684assignment2.data.Entity
-import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
-@AndroidEntryPoint
-class DashboardFragment : Fragment() {
 
-    private val viewModel: DashboardViewModel by viewModels()
+class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
+
     private lateinit var adapter: EntityAdapter
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_dashboard, container, false)
-    }
+    private val viewModel: DashboardViewModel by viewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // ✅ Pass click action to adapter
+        // Initialize Adapter with click listener
         adapter = EntityAdapter { entity ->
-            val action = DashboardFragmentDirections
-                .actionDashboardFragmentToDetailsFragment(entity)
-            findNavController().navigate(action)
+            // This is one way to pass data. Safe Args is another.
+            findNavController().navigate(
+                R.id.action_dashboardFragment_to_detailsFragment,
+                Bundle().apply { putParcelable("entity", entity) }
+            )
         }
 
-        val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerView)
+        // Setup RecyclerView
+        val recyclerView: RecyclerView = view.findViewById(R.id.recyclerView)
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-        // ✅ Observe data from ViewModel
+        // Use lifecycleScope to collect StateFlows
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.entities.collect { list ->
-                adapter.submitList(list)
+            viewModel.entities.collect { entities ->
+                adapter.submitList(entities)
             }
         }
 
-        // ✅ Trigger data load (this should pass the keypass from Login)
-        viewModel.loadDashboardData("fitness") // replace with actual keypass later
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.error.collect { errorMsg ->
+                if (errorMsg != null) {
+                    Toast.makeText(requireContext(), errorMsg, Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+
+        viewModel.loadDashboardData("fitness")
     }
 }
