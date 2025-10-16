@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -16,48 +17,28 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlin.getValue
 
 @AndroidEntryPoint
-class DashboardFragment : Fragment() {
+class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
 
     private val viewModel: DashboardViewModel by viewModels()
-    private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: EntityAdapter
-    private var keypass: String? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        keypass = arguments?.let { DashboardFragmentArgs.fromBundle(it).keypass }
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_dashboard, container, false)
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        recyclerView = view.findViewById(R.id.recyclerView)
+        adapter = EntityAdapter()
+        val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerView)
+        recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-        keypass?.let { viewModel.loadDashboard(it) }
+        val location = "footscray" // or whichever worked in Postman
+        val keypass = "fitness"
 
-        viewModel.entities.observe(viewLifecycleOwner) { entities ->
-            if (entities.isNotEmpty()) {
-                adapter = EntityAdapter(entities) { entity ->
-                    val action = DashboardFragmentDirections
-                        .actionDashboardFragmentToDetailsFragment(entity)
-                    findNavController().navigate(action)
-                }
-                recyclerView.adapter = adapter
-            } else {
-                Toast.makeText(requireContext(), "No entities found", Toast.LENGTH_SHORT).show()
+        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+            viewModel.entities.collect { entities ->
+                adapter.submitList(entities)
             }
         }
 
-        viewModel.error.observe(viewLifecycleOwner) { message ->
-            Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show()
-        }
+        viewModel.loadEntities(location, keypass)
     }
 }

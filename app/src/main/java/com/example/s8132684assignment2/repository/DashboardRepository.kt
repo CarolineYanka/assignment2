@@ -6,7 +6,6 @@ import jakarta.inject.Inject
 
 class DashboardRepository @Inject constructor(private val apiService: ApiService) {
 
-    suspend fun getDashboard(keypass: String): DashboardResponse {
-        return apiService.getDashboard(keypass)
-    }
+    suspend fun getEntities(location: String, keypass: String) =
+        apiService.getEntities(location, keypass)
 }

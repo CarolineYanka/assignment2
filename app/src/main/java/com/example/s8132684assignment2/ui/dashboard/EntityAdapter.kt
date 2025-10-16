@@ -9,18 +9,28 @@ import com.example.s8132684assignment2.R
 import com.example.s8132684assignment2.data.Entity
 
 class EntityAdapter(
-    private val entities: List<Entity>,
     private val onItemClick: (Entity) -> Unit
 ) : RecyclerView.Adapter<EntityAdapter.EntityViewHolder>() {
 
-    inner class EntityViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val property1Text: TextView = itemView.findViewById(R.id.property1Text)
-        val property2Text: TextView = itemView.findViewById(R.id.property2Text)
+    private val entities = mutableListOf<Entity>()
 
-        init {
-            itemView.setOnClickListener {
-                onItemClick(entities[adapterPosition])
-            }
+    fun submitList(list: List<Entity>) {
+        entities.clear()
+        entities.addAll(list)
+        notifyDataSetChanged()
+    }
+
+    inner class EntityViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        private val textExerciseName: TextView = itemView.findViewById(R.id.textExerciseName)
+        private val textMuscleGroup: TextView = itemView.findViewById(R.id.textMuscleGroup)
+        private val textDifficulty: TextView = itemView.findViewById(R.id.textDifficulty)
+
+        fun bind(entity: Entity) {
+            textExerciseName.text = entity.exerciseName
+            textMuscleGroup.text = "Muscle: ${entity.muscleGroup}"
+            textDifficulty.text = "Difficulty: ${entity.difficulty}"
+
+            itemView.setOnClickListener { onItemClick(entity) }
         }
     }
 
@@ -31,9 +41,7 @@ class EntityAdapter(
     }
 
     override fun onBindViewHolder(holder: EntityViewHolder, position: Int) {
-        val entity = entities[position]
-        holder.property1Text.text = entity.property1
-        holder.property2Text.text = entity.property2
+        holder.bind(entities[position])
     }
 
     override fun getItemCount(): Int = entities.size
