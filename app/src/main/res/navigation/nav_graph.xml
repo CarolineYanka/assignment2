@@ -38,7 +38,7 @@
         tools:layout="@layout/fragment_details">
         <argument
             android:name="entity"
-            app:argType="com.vu.s8132684assignment2.data.Entity" />
+            app:argType="com.example.s8132684assignment2.data.Entity" />
     </fragment>
 
 </navigation>
