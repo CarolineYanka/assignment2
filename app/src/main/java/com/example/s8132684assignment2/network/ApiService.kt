@@ -22,4 +22,7 @@ interface ApiService {
         @Path("location") location: String,
         @Path("keypass") keypass: String
     ): EntityResponse
+
+    @GET("dashboard/{keypass}") // Or whatever your endpoint is
+    suspend fun getDashboard(@Path("keypass") keypass: String): DashboardResponse
 }

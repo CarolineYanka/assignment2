@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.s8132684assignment2.data.DashboardResponse
 import com.example.s8132684assignment2.data.Entity
 import com.example.s8132684assignment2.repository.DashboardRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -20,14 +21,21 @@ class DashboardViewModel @Inject constructor(
     private val _entities = MutableStateFlow<List<Entity>>(emptyList())
     val entities: StateFlow<List<Entity>> = _entities
 
-    fun loadEntities(location: String, keypass: String) {
+    fun loadDashboardData(keypass: String) {
         viewModelScope.launch {
             try {
-                val response = repository.getEntities(location, keypass)
+                // Call the repository to get data
+                val response = repository.getDashboard(keypass)
+                // Assuming the response has a list of entities
                 _entities.value = response.entities
             } catch (e: Exception) {
                 e.printStackTrace()
             }
         }
+    }
+
+    suspend fun DashboardRepository.getDashboard(keypass: String): DashboardResponse {
+        // Call the corresponding function in your ApiService
+        return apiService.getDashboard(keypass)
     }
 }
