@@ -9,10 +9,10 @@ import android.widget.EditText
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import com.example.s8132684assignment2.viewModel.LoginResult
+import com.example.s8132684assignment2.ui.login.LoginResult
 import dagger.hilt.android.AndroidEntryPoint
 import androidx.navigation.fragment.findNavController
-import com.example.s8132684assignment2.viewModel.LoginViewModel
+import com.example.s8132684assignment2.ui.login.LoginViewModel
 
 @AndroidEntryPoint
 class LoginFragment : Fragment() {
