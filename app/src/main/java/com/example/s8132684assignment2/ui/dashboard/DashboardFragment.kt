@@ -54,6 +54,7 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
             }
         }
 
-        viewModel.loadDashboardData("fitness")
+        viewModel.loadDashboardData()
+
     }
 }

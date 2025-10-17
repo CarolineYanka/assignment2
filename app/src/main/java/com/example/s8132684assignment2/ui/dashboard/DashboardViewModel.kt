@@ -21,14 +21,16 @@ class DashboardViewModel @Inject constructor(
     private val _error = MutableStateFlow<String?>(null)
     val error: StateFlow<String?> = _error
 
-    fun loadDashboardData(keypass: String) {
+    fun loadDashboardData() {
         viewModelScope.launch {
             try {
-                val response = repository.getDashboardData(keypass)
+                val response = repository.getDashboardData()
                 _entities.value = response.entities
             } catch (e: Exception) {
                 _error.value = e.message
             }
         }
     }
+
 }
+

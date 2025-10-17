@@ -6,6 +6,7 @@ import com.example.s8132684assignment2.data.LoginResponse
 import com.vu.s8132684assignment2.data.LoginRequest
 import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.Header
 import retrofit2.http.POST
 import retrofit2.http.Path
 
@@ -15,6 +16,7 @@ interface ApiService {
         @Body request: LoginRequest
     ): LoginResponse
 
-    @GET("footscray/{keypass}")
-    suspend fun getDashboardData(@Path("keypass") keypass: String): DashboardResponse
+    @GET("dashboard/fitness")
+    suspend fun getDashboardData(): DashboardResponse
 }
+
