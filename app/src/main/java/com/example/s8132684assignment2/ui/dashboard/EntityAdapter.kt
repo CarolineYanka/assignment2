@@ -12,26 +12,12 @@ class EntityAdapter(
     private val onItemClick: (Entity) -> Unit
 ) : RecyclerView.Adapter<EntityAdapter.EntityViewHolder>() {
 
-    private val entities = mutableListOf<Entity>()
+    private val entityList = mutableListOf<Entity>()
 
     fun submitList(list: List<Entity>) {
-        entities.clear()
-        entities.addAll(list)
+        entityList.clear()
+        entityList.addAll(list)
         notifyDataSetChanged()
-    }
-
-    inner class EntityViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val textExerciseName: TextView = itemView.findViewById(R.id.textExerciseName)
-        private val textMuscleGroup: TextView = itemView.findViewById(R.id.textMuscleGroup)
-        private val textDifficulty: TextView = itemView.findViewById(R.id.textDifficulty)
-
-        fun bind(entity: Entity) {
-            textExerciseName.text = entity.exerciseName
-            textMuscleGroup.text = "Muscle: ${entity.muscleGroup}"
-            textDifficulty.text = "Difficulty: ${entity.difficulty}"
-
-            itemView.setOnClickListener { onItemClick(entity) }
-        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EntityViewHolder {
@@ -41,8 +27,22 @@ class EntityAdapter(
     }
 
     override fun onBindViewHolder(holder: EntityViewHolder, position: Int) {
-        holder.bind(entities[position])
+        val entity = entityList[position]
+        holder.bind(entity)
+        holder.itemView.setOnClickListener { onItemClick(entity) }
     }
 
-    override fun getItemCount(): Int = entities.size
+    override fun getItemCount(): Int = entityList.size
+
+    class EntityViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        private val exerciseName: TextView = itemView.findViewById(R.id.textExerciseName)
+        private val muscleGroup: TextView = itemView.findViewById(R.id.textMuscleGroup)
+        private val difficulty: TextView = itemView.findViewById(R.id.textDifficulty)
+
+        fun bind(entity: Entity) {
+            exerciseName.text = entity.exerciseName
+            muscleGroup.text = entity.muscleGroup
+            difficulty.text = entity.difficulty
+        }
+    }
 }

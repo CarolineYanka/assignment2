@@ -10,19 +10,11 @@ import retrofit2.http.POST
 import retrofit2.http.Path
 
 interface ApiService {
-
-    @POST("{location}/auth")
+    @POST("footscray/auth")
     suspend fun login(
-        @Path("location") location: String,
         @Body request: LoginRequest
     ): LoginResponse
 
-    @GET("{location}/{keypass}")
-    suspend fun getEntities(
-        @Path("location") location: String,
-        @Path("keypass") keypass: String
-    ): EntityResponse
-
-    @GET("dashboard/{keypass}") // Or whatever your endpoint is
-    suspend fun getDashboard(@Path("keypass") keypass: String): DashboardResponse
+    @GET("footscray/{keypass}")
+    suspend fun getDashboardData(@Path("keypass") keypass: String): DashboardResponse
 }

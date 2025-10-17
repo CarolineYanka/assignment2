@@ -1,32 +1,46 @@
 package com.example.s8132684assignment2.ui.login
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.s8132684assignment2.repository.LoginRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val repository: LoginRepository
+    private val loginRepository: LoginRepository
 ) : ViewModel() {
 
-    private val _keypass = MutableLiveData<String>()
-    val keypass: LiveData<String> = _keypass
+    private val _loginState = MutableStateFlow<LoginUiState>(LoginUiState.Idle)
+    val loginState: StateFlow<LoginUiState> = _loginState
 
-    private val _error = MutableLiveData<String>()
-    val error: LiveData<String> = _error
-
-    fun login(location: String, username: String, password: String) {
+    fun login(username: String, password: String) {
         viewModelScope.launch {
             try {
-                val response = repository.login(location, username, password)
-                _keypass.postValue(response.keypass)
+                _loginState.value = LoginUiState.Loading
+
+                val response = loginRepository.login(username, password)
+
+                // Handle response: store keypass
+                if (response.keypass != null) {
+                    _loginState.value = LoginUiState.Success(response.keypass)
+                } else {
+                    _loginState.value = LoginUiState.Error("Invalid response from server")
+                }
+
             } catch (e: Exception) {
-                _error.postValue("Login failed: ${e.localizedMessage}")
+                _loginState.value = LoginUiState.Error(e.message ?: "Login failed")
             }
         }
     }
+}
+
+sealed class LoginUiState {
+    object Idle : LoginUiState()
+    object Loading : LoginUiState()
+    data class Success(val keypass: String) : LoginUiState()
+    data class Error(val message: String) : LoginUiState()
 }
