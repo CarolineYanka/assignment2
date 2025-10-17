@@ -13,45 +13,51 @@
             android:id="@+id/textExerciseName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:fontFamily="sans-serif-condensed-medium"
             android:text="Exercise Name"
-            android:textStyle="bold"
-            android:textSize="22sp"
-            android:layout_marginBottom="8dp" />
+            android:textSize="34sp"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/textMuscleGroup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Muscle Group:"
-            android:layout_marginBottom="4dp" />
+            android:layout_marginBottom="4dp"
+            android:fontFamily="sans-serif-medium"
+            android:text="Muscle Group:" />
 
         <TextView
             android:id="@+id/textEquipment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Equipment:"
-            android:layout_marginBottom="4dp" />
+            android:layout_marginBottom="4dp"
+            android:fontFamily="sans-serif-medium"
+            android:text="Equipment:" />
 
         <TextView
             android:id="@+id/textDifficulty"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Difficulty:"
-            android:layout_marginBottom="4dp" />
+            android:layout_marginBottom="4dp"
+            android:fontFamily="sans-serif-medium"
+            android:text="Difficulty:" />
 
         <TextView
             android:id="@+id/textCalories"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Calories/hour:"
-            android:layout_marginBottom="8dp" />
+            android:layout_marginBottom="8dp"
+            android:fontFamily="sans-serif-medium"
+            android:text="Calories/hour:" />
 
         <TextView
             android:id="@+id/textDescription"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Description"
-            android:layout_marginBottom="8dp" />
+            android:layout_marginBottom="8dp"
+            android:fontFamily="sans-serif-medium"
+            android:text="Description" />
 
     </LinearLayout>
 </ScrollView>
